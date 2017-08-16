@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../partials/head %>
+    
+	 <style>
+		 
+	.node {
+	  stroke: black;
+	  stroke-width: 0.5;
+	  font-family: Serif;
+	  text-anchor: middle;
+	  font-size: 10px;
+	  //cursor: pointer;
+	  cursor: move;
+	}
+
+	.group {
+	  stroke: #fff;
+	  stroke-width: 1.5px;
+	  cursor: move;
+	  opacity: 0.7;
+	}
+
+	.link {
+	  stroke: #7a4e4e;
+	  stroke-width: 5px;
+	  stroke-opacity: 1;
+	}
+
+	.label {
+		fill: white;
+		font-family: Verdana;
+		font-size: 25px;
+		text-anchor: middle;
+		cursor: move;
+	}
+	.shadow {
+		opacity: 0.5;
+	}
+	#CTooltip {
+		 opacity: 0;
+		 position: absolute;
+		 background: rgba(255, 255, 255, 0.8);
+		 color: black; //white;
+		 padding: 3px;
+		 border-radius: 3px;
+		 -webkit-transition: all .2s ease;
+		 transition: all .2s ease;
+		 //pointer-events: none;
+		 -webkit-transform: translate(-50%, 0);
+		 transform: translate(-50%, 0);		 
+	}
+		
+	#slider {
+		width: 97%;
+		background: white;
+	}
+	
+	#slider .slider-selection {
+		background: #BABABA;
+  	}
+  	
+	#slider .slider-tick {
+		background: #d9d9d9;
+  	} 
+  	
+  	#slider .slider-tick.in-selection {
+		background: #59c8f1;
+	}
+ 	
+	.no-gutter {
+	  //padding-right: 5px;
+	  padding-left: 7%;
+	} 
+	
+	.player{
+	  margin: 50px 0;
+	}
+	
+	#projectGraphHide {
+		 background-color: white;
+	}
+		
+	#fullscreen:-moz-full-screen {
+		width: 100%;
+		font-size: 150%; 		
+		text-align: center;		
+		padding: 5%;//42px;
+		background-color: white;		
+	}	
+	#fullscreen:-ms-fullscreen {
+		width: 100%;
+		font-size: 150%; 		
+		text-align: center;		
+		padding: 5%;//42px;
+		background-color: white;
+	}
+	#fullscreen:-webkit-full-screen {
+		width: 100%;
+		font-size: 150%; 		
+		text-align: center;		
+		padding: 5%;//42px;
+		background-color: white;
+	}
+								
+	</style>        
+    
+</head>
+
+<body>
+    <script src="../js/plugins/webcola/d3v4.js"></script>
+    <script src="../js/plugins/webcola/cola.min.js"></script>
+    <script src="../js/plugins/export/saveSvgAsPng.js"></script>
+    
+    <script src="../js/plugins/chartjs/moment.min.js"></script> 
+    
+    <script src="../js/bootstrap-slider.min.js"></script>
+    <link href="../css/bootstrap-slider.min.css" rel="stylesheet">
+        
+    <div id="wrapper">
+		 <% include ../partials/header %>
+		<div id="page-wrapper">
+
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+			<div class="panel">
+			</div>                        
+			<ol class="breadcrumb">
+                            <li>
+                                <i class="fa fa-dashboard"></i>  <a href="/dashboard">Dashboard</a>
+                            </li>
+                            <li class="active">
+                                <i class="fa fa-file"></i> ItemBoard
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                                                                                                                                                                                                        
+                <div class="row">
+                    <div class="col-lg-2 col-md-6">
+                        <div class="panel panel-red">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-support fa-3x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge"><%= nbVuln%></div>
+                                        <div>Vulnerabilities</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="/item-category-vuln">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>                         
+                        </div>
+                    </div>   
+                    <div class="col-lg-2 col-md-6">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-tasks fa-3x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge"><%= nbHost%></div>
+                                        <div>Hosts</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="/item-category-host">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-tasks fa-3x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge"><%= nbPassword%></div>
+                                        <div>Passwords</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="/item-category-password">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>                    
+                    <div class="col-lg-2 col-md-6">
+                        <div class="panel panel-yellow">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-support fa-3x"></i>
+                                    </div>                                 
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge"><%= nbBD%></div>
+                                        <div>Backdoors</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="/item-category-backdoor">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6">
+                        <div class="panel panel-green">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-edit fa-3x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge"><%= nbTips%></div>
+                                        <div>Tips</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="/item-category-tips">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6">
+                        <div class="panel panel-white">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-comments fa-3x"></i>
+                                    </div>
+                                    <div class="col-xs-3 text-right">
+                                        <div class="huge"><%= nbVPS%></div>
+                                        <div>VPS</div>
+                                    </div>
+                                    <div class="col-xs-3 text-right">
+                                        <div class="huge"><%= nbDNS%></div>
+                                        <div>DNS</div>
+                                    </div>                                    
+                                    <div class="col-xs-3 text-right">
+                                        <div class="huge"><%= nbCert%></div>
+                                        <div>Cert</div>
+                                    </div>                              
+                                </div>
+                            </div>
+								<a href="/item-category-resource">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>                                        
+                    
+                </div>
+                <!-- /.row -->				
+				
+				<div class="row">
+                    <div class="col-sm-2">
+                        <div class="panel panel-danger">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Vulnerabilities</h3>
+                            </div>
+                            <div class="list-group">
+								<form action="#" method="post" role="form">
+									<input type="hidden" value="vuln" name="category" />
+									<button type="submit" class="list-group-item"><input type="hidden" value="other" name="subcategory" /><i>New</i></button>								
+								</form>								
+								<% vulnSubCat.forEach(function(vuln){ %>
+								<form action="#" method="post" role="form">
+									<input type="hidden" value="vuln" name="category" />
+									<button type="submit" class="list-group-item"><input type="hidden" value="<%= vuln %>" name="subcategory" /><%= vuln %></button>
+								</form>
+								<% }); %>								
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.col-sm-4 -->
+                    <div class="col-sm-2">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Hosts</h3>
+                            </div>
+                            <div class="list-group">
+								<form action="#" method="post" role="form">
+									<input type="hidden" value="host" name="category" />
+									<button type="submit" class="list-group-item"><input type="hidden" value="other" name="subcategory" /><i>New</i></button>								
+								</form>									
+								<% hostSubCat.forEach(function(host){ %>
+								<form action="#" method="post" role="form">
+									<input type="hidden" value="host" name="category" />
+									<button type="submit" class="list-group-item"><input type="hidden" value="<%= host %>" name="subcategory" /><%= host %></button>
+								</form>
+								<% }); %>							
+                            </div>
+                        </div>
+                    </div>  
+                    <!-- /.col-sm-4 -->
+                    <div class="col-sm-2">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Passwords</h3>
+                            </div>
+                            <div class="list-group">
+								<form action="#" method="post" role="form">
+									<input type="hidden" value="password" name="category" />
+									<button type="submit" class="list-group-item"><input type="hidden" value="other" name="subcategory" /><i>New</i></button>								
+								</form>									
+								<% passwordSubCat.forEach(function(password){ %>
+								<form action="#" method="post" role="form">
+									<input type="hidden" value="password" name="category" />
+									<button type="submit" class="list-group-item"><input type="hidden" value="<%= password %>" name="subcategory" /><%= password %></button>
+								</form>
+								<% }); %>							
+                            </div>
+                        </div>
+                    </div> 
+                    <!-- /.col-sm-4 -->
+                    <div class="col-sm-2">
+                        <div class="panel panel-warning">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Backdoors</h3>
+                            </div>
+                            <div class="list-group">
+								<form action="#" method="post" role="form">
+									<input type="hidden" value="backdoor" name="category" />
+									<button type="submit" class="list-group-item"><input type="hidden" value="other" name="subcategory" /><i>New</i></button>								
+								</form>								
+								<% backdoorSubCat.forEach(function(backdoor){ %>
+								<form action="#" method="post" role="form">
+									<input type="hidden" value="backdoor" name="category" />
+									<button type="submit" class="list-group-item"><input type="hidden" value="<%= backdoor %>" name="subcategory" /><%= backdoor %></button>
+								</form>
+								<% }); %>									
+                            </div>
+                        </div>
+                    </div>                    
+                    <!-- /.col-sm-4 -->
+                    <div class="col-sm-2">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Tips</h3>
+                            </div>
+                            <div class="list-group">
+							<form action="#" method="post" role="form">
+								<input type="hidden" value="tips" name="category" />
+								<button type="submit" class="list-group-item"><input type="hidden" value="other" name="subcategory" /><i>New</i></button>
+							</form>								
+							<form action="#" method="post" role="form">
+								<input type="hidden" value="tips" name="category" />
+								<button type="submit" class="list-group-item"><input type="hidden" value="network" name="subcategory" />Network</button>
+							</form>
+							<form action="#" method="post" role="form">
+								<input type="hidden" value="tips" name="category" />
+								<button type="submit" class="list-group-item"><input type="hidden" value="windows" name="subcategory" />Windows</button>
+							</form>
+							<form action="#" method="post" role="form">
+								<input type="hidden" value="tips" name="category" />
+								<button type="submit" class="list-group-item"><input type="hidden" value="linux" name="subcategory" />Linux</button>
+							</form>
+							<form action="#" method="post" role="form">
+								<input type="hidden" value="tips" name="category" />
+								<button type="submit" class="list-group-item"><input type="hidden" value="web" name="subcategory" />Web</button>
+							</form>		
+							<form action="#" method="post" role="form">
+								<input type="hidden" value="tips" name="category" />
+								<button type="submit" class="list-group-item"><input type="hidden" value="DB" name="subcategory" />DB</button>
+							</form>		
+							<form action="#" method="post" role="form">
+								<input type="hidden" value="tips" name="category" />
+								<button type="submit" class="list-group-item"><input type="hidden" value="tools" name="subcategory" />Tools</button>
+							</form>									
+							<form action="#" method="post" role="form">
+								<input type="hidden" value="tips" name="category" />
+								<button type="submit" class="list-group-item"><input type="hidden" value="appliance" name="subcategory" />Appliance</button>
+							</form>	
+							<form action="#" method="post" role="form">
+								<input type="hidden" value="tips" name="category" />
+								<button type="submit" class="list-group-item"><input type="hidden" value="exploit" name="subcategory" />Exploit</button>
+							</form>	
+							<% tipsSubCat.forEach(function(tips){ %>
+							<form action="#" method="post" role="form">
+								<input type="hidden" value="tips" name="category" />
+								<button type="submit" class="list-group-item"><input type="hidden" value="<%= tips %>" name="subcategory" /><%= tips %></button>
+							</form>
+							<% }); %>																																																			
+                            </div>
+                        </div>
+                    </div>  
+                    <div class="col-sm-2">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Resources</h3>
+                            </div>
+                            <div class="list-group">
+							<form action="#" method="post" role="form">
+								<input type="hidden" value="resource" name="category" />
+								<button type="submit" class="list-group-item"><input type="hidden" value="other" name="subcategory" /><i>New</i></button>
+							</form>								
+							<form action="#" method="post" role="form">
+								<input type="hidden" value="resource" name="category" />
+								<button type="submit" class="list-group-item"><input type="hidden" value="vps" name="subcategory" />VPS</button>
+							</form>
+							<form action="#" method="post" role="form">
+                                <input type="hidden" value="resource" name="category" />
+								<button type="submit" class="list-group-item"><input type="hidden" value="dns" name="subcategory" />DNS</button>
+                            </form>								
+							<form action="#" method="post" role="form">
+                                <input type="hidden" value="resource" name="category" />
+								<button type="submit" class="list-group-item"><input type="hidden" value="certificat" name="subcategory" />Certificat</button>
+                            </form>
+							<% resourceSubCat.forEach(function(resource){ %>
+							<form action="#" method="post" role="form">
+								<input type="hidden" value="resource" name="category" />
+								<button type="submit" class="list-group-item"><input type="hidden" value="<%= resource %>" name="subcategory" /><%= resource %></button>
+							</form>
+							<% }); %>                            								
+                            </div>
+                        </div>
+                    </div>
+               </div>
+												                                    
+				<div class="row">
+					<div class="panel panel-heading">
+						<div class="btn-toolbar">
+							<form action="#" method="post" role="form">                      
+								<button type="submit" class="btn btn-sm btn-info"><h6><i class="fa fa-plus-square"></i><strong> Create Custom Item</strong></h6></button>
+							</form>
+							<button onclick="window.location.href='/item-category-other'" type="submit" class="btn btn-sm btn-info"><h6><i class="fa fa-list-ul"></i><strong> Show Custom Items</strong></h6></button>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row">			
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+								<button class="btn btn-sm btn-default" id="hideGraph">
+									<i class="fa fa-long-arrow-right"></i> Hosts Map
+								</button>
+								<button class="btn btn-sm btn-default" id="snapPosition">Position Snapshot</button>
+								<button class="btn btn-sm btn-default" id="resetPosition">Reset</button>
+								<button class="btn btn-sm btn-default pull-right" id="btnFullscreen" >
+									Fullscreen <i class="fa fa-expand"></i>
+								</button>							
+								<button class="btn btn-sm btn-default pull-right" id="saveSchema" >
+									Download <i class="fa fa-download"></i>
+								</button>								
+							</h3>
+                        </div>
+						<div id="fullscreen">
+							<div id="projectGraphHide" class="panel-body">
+								<div id="networkChart" >
+							</div>
+							<div class="panel-heading" style="background-color: white;">					
+								<div class="row no-gutter">								
+									<div class="col-xs-12">
+										<input id="drawDate" data-slider-id='slider' type="text" />
+									</div>
+								</div>
+							</div> 
+							<div class="player text-center">
+								<button type="button" id="button_sbw" class="btn" >
+									<i class="fa fa-step-backward"></i>
+								</button>							
+								<button type="button" id="button_play" class="btn" >
+									<i class="fa fa-play"></i>
+								</button>
+								<button type="button" id="button_stop" class="btn" >
+									<i class="fa fa-stop"></i>
+								</button>
+								<button type="button" id="button_sfw" class="btn" >
+									<i class="fa fa-step-forward"></i>
+								</button>														
+							</div>						
+							<div class="panel-heading" style="background-color: white;">
+								<span id="SliderVal"></span>
+							</div>
+						</div>                       
+                    </div>
+				</div>
+                <!-- /.row --> 
+                                                                                                                                                                                 
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+								<button class="btn btn-sm btn-default" id="hideChart">
+									<i class="fa fa-long-arrow-right"></i> Items History
+								</button>
+							</h3>
+                        </div>
+                        <div id="projectChartHide" class="panel-body">
+                            <!-- chart canvas element -->
+							<canvas id="projectChart" style="height: 300px; width: 100%;"></canvas>
+							<div id="CTooltip"></div>
+                        </div>
+                    </div>
+                </div>
+               
+                <!-- /.row --> 				
+				
+				
+				
+            </div>
+            <!-- /.container-fluid -->
+		</div>
+	</div>
+   
+	<% include ../partials/footer %>
+    
+</body>
+
+<script>
+
+	$(document).ready(function(){
+		
+		// DEFINE BUTTON //
+		
+		//fullscreen
+		$("#btnFullscreen").click(function() {
+			toggleFullscreen(fullscreen);
+		});			
+		
+		//show hide chart button
+		$("#hideChart").click(function(){
+			$("div#projectChartHide").toggle();
+		});
+		
+		$("#hideGraph").click(function(){
+			$("div#projectGraphHide").toggle();
+		});		
+
+		//position snapshot button
+		$("#snapPosition").click(function(){
+			var snap = {};
+			cola.stop();
+
+			d3.selectAll(".node").data().map(function(d){
+					if(d){ snap[d.idd] = [d.x,d.y]; }
+			});
+			
+			$.ajax({
+				type: 'POST',
+				data: {
+					snap: snap
+				}
+			});
+		});		
+		
+		//position reset button
+		$("#resetPosition").click(function(){
+			$.ajax({
+				type: 'POST',
+				data: {
+					snap: ""
+				}
+			});
+			location.hash = '#projectGraphHide';
+			location.reload(true);
+		});	
+		
+		//play network map button
+		$("#button_play").click(function(){
+			if(state=='stop'){
+				state='play';
+				var button = d3.select("#button_play").classed('btn-success', true); 
+				button.select("i").attr('class', "fa fa-pause"); 
+				player();
+			}
+			else if(state=='play' || state=='resume'){
+				state = 'pause';
+				d3.select("#button_play i").attr('class', "fa fa-play");
+				clearInterval(myTimer);				
+			}
+			else if(state=='pause'){
+				state = 'resume';
+				d3.select("#button_play i").attr('class', "fa fa-pause");
+				player();        
+			}
+		});
+
+		//stop network map button
+		$("#button_stop").click(function(){
+			state = 'stop';
+			var button = d3.select("#button_play").classed('btn-success', false);
+			button.select("i").attr('class', "fa fa-play");
+			
+			if (typeof myTimer != 'undefined'){
+				clearInterval(myTimer);
+			}			
+			
+			update_graph(tmpLabelsInit.sort()[tmpLabelsInit.length - 1]);
+		});	
+		
+		//backward step network map button
+		$("#button_sbw").click(function(){
+			//find more nearest value
+			var nearestValue = closest(allItemGraphDate.sort(), last_slide_label);
+			last_slide_label = nearestValue;
+			
+			//if label is the first, set to end (loop)
+			if(last_slide_label <= allItemGraphDate.sort()[0]){
+				last_slide_label = allItemGraphDate.sort()[allItemGraphDate.sort().length - 1 ];
+				update_graph(allItemGraphDate.sort()[allItemGraphDate.sort().indexOf(last_slide_label) ]);
+			}else{			
+				update_graph(allItemGraphDate.sort()[allItemGraphDate.sort().indexOf(last_slide_label) - 1 ]);
+			}
+		});
+		
+		//forward step network map button
+		$("#button_sfw").click(function(){
+			//find more nearest value
+			var nearestValue = closest(allItemGraphDate.sort(), last_slide_label);
+			last_slide_label = nearestValue;
+			
+			//if label is the last, set to first (loop)
+			if(last_slide_label >= allItemGraphDate.sort()[allItemGraphDate.sort().length - 1 ]){
+				last_slide_label = allItemGraphDate.sort()[0];
+				update_graph(allItemGraphDate.sort()[allItemGraphDate.sort().indexOf(last_slide_label) ]);
+			}else{		
+				update_graph(allItemGraphDate.sort()[allItemGraphDate.sort().indexOf(last_slide_label) + 1 ]);
+			}
+		});				
+		
+		// DEFINE FUNCTION //
+		
+		//fullscreen
+		function toggleFullscreen(elem) {
+			elem = elem || document.documentElement;
+			if (!document.fullscreenElement && !document.mozFullScreenElement &&
+			!document.webkitFullscreenElement && !document.msFullscreenElement) {
+				if (elem.requestFullscreen) {
+					elem.requestFullscreen();
+				} else if (elem.msRequestFullscreen) {
+					elem.msRequestFullscreen();
+				} else if (elem.mozRequestFullScreen) {
+					elem.mozRequestFullScreen();
+				} else if (elem.webkitRequestFullscreen) {
+					elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+				}
+			} else {
+				if (document.exitFullscreen) {
+					document.exitFullscreen();
+				} else if (document.msExitFullscreen) {
+					document.msExitFullscreen();
+				} else if (document.mozCancelFullScreen) {
+					document.mozCancelFullScreen();
+				} else if (document.webkitExitFullscreen) {
+					document.webkitExitFullscreen();
+				}
+			}
+		}		
+		
+		//update sliderval value and netwok map
+		function update_graph(label){
+			
+			//set last label at top function because if function as an error pass to next element
+			last_slide_label = label;
+						
+			//remove old graph data
+			svg.selectAll(".link").remove();
+			svg.selectAll(".group").remove();
+			svg.selectAll(".node").remove();
+			svg.selectAll(".label").remove();
+
+			slider.setValue(label);
+			
+			//create new graph
+			var graph = createData(label);			
+			createGraph(graph, cola);			
+			
+			document.getElementById("SliderVal").textContent = "Cursor Date : " + new Date(label).toISOString().split('T')[0] + " " + new Date(label).toISOString().split('T')[1].split('.')[0];
+			
+			//if label is the last, stop setinterval if is set
+			if(label == allItemGraphDate.sort()[allItemGraphDate.sort().length - 1 ] ){ 
+				state = 'stop';
+				var button = d3.select("#button_play").classed('btn-success', false);
+				button.select("i").attr('class', "fa fa-play");
+				
+				if (typeof myTimer != 'undefined'){
+					clearInterval(myTimer);
+				}
+			}
+		}
+		
+		//find the nearest value from date in arr 
+		function closest(arr, date){
+			var nearestValue = Math.max.apply(null, arr); 
+
+			for(var i = 0; i < arr.length; i++){ 
+				if(arr[i] >= date && arr[i] < nearestValue) nearestValue = arr[i]; 
+			}
+
+			return nearestValue; 
+		}				
+		
+		//play network map draw on play or resume
+		function player(){
+			
+			//find more nearest value
+			var nearestValue = closest(allItemGraphDate.sort(), last_slide_label);
+			
+			//if slide cursor is at end, start play from begining
+			if(allItemGraphDate.sort().indexOf(nearestValue) == ((allItemGraphDate.length - 1) || (allItemGraphDate.length - 2)) ){
+				last_slide_label = allItemGraphDate.sort()[0];	
+			//else start from cursor position and increment it
+			}else{
+				last_slide_label = nearestValue;
+			}
+			//draw element
+			update_graph(allItemGraphDate.sort()[allItemGraphDate.sort().indexOf(last_slide_label) ]);
+			//then +1 if more than one element exist
+			if( allItemGraphDate.length > 1 ){
+				myTimer = setInterval(function() { update_graph(allItemGraphDate.sort()[allItemGraphDate.sort().indexOf(last_slide_label) + 1 ]); }, 1000);			
+			}
+		}		
+		
+		//Date Slider Filter
+		function percent(array)
+		{
+			var i, max=0;
+		 
+			//max value
+			for (i=0; i<array.length; i++)
+				if (array[i] > max) max = array[i];
+		 
+			var min = max;
+			//min value
+			for (i=0; i<array.length; i++)
+				if (array[i] < min) min = array[i];		  
+			
+			//percent array
+			for (i=0; i<array.length; i++)
+				array[i] = (array[i] - min) * 100 / (max - min);
+		 
+			return array;
+		}
+
+		// INIT //
+		
+		//init player state
+		var state = 'stop';
+		
+		//duplicate labels array to convert as percent array and to sort			
+		var tmpLabelsInit = allLabels.slice();
+		tmpLabelsInit.sort().splice((tmpLabelsInit.length - 1),1);
+		var tmpLabelsPercent = tmpLabelsInit.slice();
+				
+		//create array with all item date
+		var allItemGraphDate = [];
+		<% itemGraph.forEach(function(item, index){ %>
+			allItemGraphDate.push(new Date("<%= item.date %>").getTime());
+		<% }); %>			  
+		allItemGraphDate.push(tmpLabelsInit.sort()[tmpLabelsInit.length - 1]);	
+						
+		//init slider param
+		var slider = new Slider('#drawDate', {
+			value: tmpLabelsInit.sort()[tmpLabelsInit.length - 1],
+			max: tmpLabelsInit.sort()[tmpLabelsInit.length - 1],
+			min: tmpLabelsInit.sort()[0],
+			ticks: tmpLabelsInit,
+			ticks_positions: percent(tmpLabelsPercent),
+			step: 1,
+			ticks_tooltip: true,
+			formatter: function(value) {
+				if( typeof tmpLabelsInit[value] != 'undefined'){
+					return new Date(tmpLabelsInit[value]).toISOString().split('T')[0] + " " + new Date(tmpLabelsInit[value]).toISOString().split('T')[1].split('.')[0];
+				}else{
+					return new Date(value).toISOString().split('T')[0] + " " + new Date(value).toISOString().split('T')[1].split('.')[0];
+				}
+			}				
+		});
+
+		//init sliderval
+		document.getElementById("SliderVal").textContent = "Cursor Date : " + new Date(tmpLabelsInit.sort()[tmpLabelsInit.length - 1]).toISOString().split('T')[0] + " " + new Date(tmpLabelsInit.sort()[tmpLabelsInit.length - 1]).toISOString().split('T')[1].split('.')[0];
+		
+		//init last label
+		var last_slide_label = tmpLabelsInit.sort()[tmpLabelsInit.length - 1];
+		
+		//on click, update sliderval value and netwok map
+		slider.on("change", function(sliderValue) {
+			update_graph(sliderValue.newValue);
+		});
+	});
+	
+		        
+	//START NETWORK SCHEMA
+	var width	= screen.width - 350; //1550;
+        height	= screen.width / 2; //500;
+        
+    var viewBoxSize = "-520 -200 " + (width + 1200) +" " + height;	
+    var svg = d3.select("#networkChart").append("svg")
+		 //zoom 
+		 .call(d3.zoom().on("zoom", function () {
+			svg.attr("transform", d3.event.transform)
+		 }))        
+		.attr("viewBox", viewBoxSize);	
+		
+	var cola = cola.d3adaptor(d3)
+		.linkDistance(300) 
+		.avoidOverlaps(true)
+		.handleDisconnected(false) //true
+		.symmetricDiffLinkLengths(100);		
+	
+	var graph = createData(-1);
+	createGraph(graph, cola);
+	
+	//CREATE DATA FOR GRAPH
+	function createData(sliderValue){		
+		var nodes = [];
+		var links = [];
+		var groups = [];
+		
+		var out = [];
+		
+		var newDataSet = [];
+		
+		//CREATE NEW SET OF DATA WITH SLIDERVALUE
+		<% itemGraph.forEach(function(item, indexitem){ %>
+			if ( sliderValue == -1 || new Date("<%= item.date %>") <= new Date(sliderValue) ){
+				var tmpObj = {};
+				
+				tmpObj._id			= "<%= item._id %>";
+				tmpObj.name			= "<%= item.name %>";
+				tmpObj.ip			= "<%= item.ip %>";
+				tmpObj.os			= "<%= item.os %>";
+				tmpObj.owned		= "<%= item.owned %>";
+				tmpObj.status		= "<%= item.status %>";
+				tmpObj.category		= "<%= item.category %>";
+				tmpObj.subcategory	= "<%= item.subcategory %>";
+				tmpObj.backdoorID	= "<%= item.backdoorID %>";
+				tmpObj.bdDay		= "<%= item.bdDay %>";
+				tmpObj.bdHour		= "<%= item.bdHour %>";
+				tmpObj.bdMin		= "<%= item.bdMin %>";
+				
+				tmpObj.attachItems	= [];
+				if ( <%= item.attachItems.length %> >= 0 ){
+					<% item.attachItems.forEach(function(attach){ %>
+						tmpObj.attachItems.push("<%= attach %>");
+					<% }); %>
+				}
+				
+				tmpObj.owner		= "<%= item.owner %>";
+				tmpObj.date			= new Date("<%= item.date %>").getTime();
+				tmpObj.draw			= "<%= item.draw %>";
+				tmpObj.updateDate	= new Date("<%= item.updateDate %>").getTime();
+				
+				newDataSet.push(tmpObj);
+			}
+		<% }); %>
+		
+		newDataSet.forEach(function(item, indexitem){
+
+			//NODES CONFIG
+			var bdID = item._id;
+			var BDStatus	= "";
+
+			<% itemBD.forEach(function(bd){ %>
+				<% bd.attachItems.forEach(function(bdItem){ %>
+					if ( item._id == "<%= bdItem %>"){
+						bdID = "<%= bd._id %>";
+						BDStatus = "white";
+					}
+				<% }); %>
+			<% }); %>							
+
+			var node = {};
+			if ( item.ip.length > 0 ) {
+				node.name 	= item.ip + " " + item.name; 
+			}else{
+				node.name 	= item.name;
+			}
+			
+			//if node position snapshot restore x and y position
+			<% if(project != null){ %>
+				<% if(project.snap != null){ %>
+						<% Object.keys(project.snap).forEach(function(key){ %>
+							var t = bdID;
+							if( t == "<%= key %>" ){
+								node.x = <%= project.snap[key][0] %>;
+								node.y	= <%= project.snap[key][1] %>;						
+								node.fixed	= true;
+							}	
+						<% }); %>				
+				<% } %>
+			<% } %>		
+			
+			node.width 		= 210; 
+			node.height		= 210;
+			node.img		= "../img/" + item.os + ".png";
+			
+			if(BDStatus) {
+				node.BDStatus	= "../img/" + BDStatus + ".png";
+			}else{
+				node.BDStatus	= "";
+			}				
+			
+			if(item.owned == 'on'){
+				node.owned		= "";
+			}else{
+				if(item.os == 'firewall'){
+					node.owned		= "../img/shadow-firewall.png";
+				}else{
+					node.owned		= "../img/shadow.png";
+				}
+			}
+			node.idd		= bdID; 
+				
+			nodes.push(node);
+		
+		
+			//LINKS CONFIG			
+			if (typeof item.attachItems !== 'undefined' && item.attachItems.length > 0){
+				item.attachItems.forEach(function(attachItem){
+					newDataSet.forEach(function(item2, indexitem2){
+						if (attachItem == item2._id){
+							var linki = {};
+							linki.source = indexitem;
+							linki.target = indexitem2;
+							links.push(linki);
+						}
+					});
+				});
+			}
+		
+					
+			//GROUPS CONFIG
+			if (out.includes(indexitem) == false){
+				out.push(indexitem);
+				
+				var group = {};
+					
+				group.name = item.subcategory;
+				group.leaves = [];
+					
+				group.leaves.push(indexitem);
+					
+				newDataSet.forEach(function(item2, indexitem2){
+					if ( group.leaves.includes(indexitem2) == false ){
+						if (item.subcategory == item2.subcategory){
+							out.push(indexitem2);
+							group.leaves.push(indexitem2);
+						}
+					}
+				});
+
+				groups.push(group);
+			}				
+		});
+				
+		var graph=
+		{
+			"nodes":nodes,
+			"links":links,
+			"groups":groups
+		}
+
+		return graph;		
+	}
+		
+	//CREATE GRAPH FROM DATA
+	function createGraph(graph, cola){
+		
+		var color = d3.scaleOrdinal(d3.schemeCategory20);		
+		
+		// ZOOM function with ctrl+mouse wheel but not work smoothly //
+		/*		
+		svg.call(zoom = d3.zoom().on('zoom', redrawOnZoom)).on('dblclick.zoom', null);
+
+		var zooming = false;
+
+		function redrawOnZoom() {
+			if (zooming) {
+				// the actual "zooming"
+				svg.attr("transform", d3.event.transform);
+			}
+		};
+		
+		d3.select("body").on("keydown", function () {
+			zooming = d3.event.ctrlKey;
+		});
+
+		d3.select("body").on("keyup", function () {
+			zooming = false;
+		});
+		*/
+		// END ZOOM //
+					
+		cola
+			.nodes(graph.nodes)
+			.links(graph.links)
+			.groups(graph.groups)
+			.start();
+
+		var group = svg.selectAll(".group")
+			.data(graph.groups)
+			.enter().append("rect")
+			.attr("rx", 8).attr("ry", 8)
+			.attr("class", "group")
+			.style("fill", function (d, i) { return color(i); })
+			.call(cola.drag);
+				
+			group.append("title")
+				.text(function (d) { return d.name; });            
+	  
+		var link = svg.selectAll(".link")
+			.data(graph.links)
+			.enter().append("line")
+			.attr("class", "link");
+
+		var node = svg.selectAll(".node")
+			.data(graph.nodes)
+			.enter().append("g")
+			.attr("class", "node")			
+			.on("dblclick", function (d) {
+				location.href = '/item-edit-' + d.idd;
+			})
+			.call(cola.drag);
+		
+		// computer picture
+		node.append("image")
+			.attr("xlink:href", function(d) { return d.img; } )
+			.attr("x", -8)
+			.attr("y", -8)
+			.attr("width", 16)
+			.attr("height", 16)
+			.attr("transform", "scale(10)");	
+		// backdoor picture	
+		node.append("image")
+			.attr("xlink:href", function(d) { return d.BDStatus; } )
+			.attr("x", -8)
+			.attr("y", -8)
+			.attr("width", 16)
+			.attr("height", 16)
+			.attr("transform", "scale(10)");	
+		// owned picture (shadow)	
+		node.append("image")
+			.attr("xlink:href", function(d) { return d.owned; } )
+			.attr("x", -8)
+			.attr("y", -8)
+			.attr("width", 16)
+			.attr("height", 16)
+			.attr("class", "shadow")
+			.attr("transform", "scale(10)");			
+
+		node.append("text")
+			.attr("dx", -1) //-2
+			.attr("dy", 3)
+			.attr("transform", "scale(2)")
+			.text(function(d) { return d.name })
+			.call(wrap);
+			  
+		node.append("title")
+			.text(function (d) { return d.name; }); 
+				
+		var label = svg.selectAll(".label")
+			.data(graph.groups)
+			.enter().append("text")
+			.attr("class", "label")
+			.text(function (d) { return d.name.replace(/\s+/g, ''); })
+			.style("fill", "black")
+			.style("font-size","20px");	
+									
+		cola.on("tick", function () {
+									
+			link.attr("x1", function (d) { return d.source.x; })
+				.attr("y1", function (d) { return d.source.y; })
+				.attr("x2", function (d) { return d.target.x; })
+				.attr("y2", function (d) { return d.target.y; });
+				
+			group.attr("x", function (d) { return d.bounds.x; })
+				.attr("y", function (d) { return d.bounds.y + 40; })
+				.attr("width", function (d) { return d.bounds.width() - 5; })
+				.attr("height", function (d) { return d.bounds.height() - 30; });
+					
+			node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });    
+												
+			label
+				.attr("x", function (d) {
+					if(d.name){ 
+						var h = this.getBBox().width;
+						return d.bounds.x + h/2 + 30; 
+					} 
+				})
+				.attr("y", function (d) {
+					if(d.name){ 				
+						var h = this.getBBox().height;
+						return d.bounds.y + h/2 + 20;
+					}
+				});			            
+		});	
+	}
+					
+	//CUT TEXT SCHEMA 
+	function wrap(text) {
+		text.each(function() {
+			var text = d3.select(this);
+			var words = text.text().split(/\s+/);//.reverse();
+			var line = [];
+			var lineNumber = 0;
+			var y = text.attr("y");
+			var dy = parseFloat(text.attr("dy"));
+			var lineHeight = 1.1;
+			var tspan = text.text(null).append("tspan").attr("x", function(d) { return d.children || d._children ? -10 : 10; }).attr("y", y).attr("dy", dy + "em");   
+			
+			//FISRT WORD (IP)			
+			if (typeof words[0] != 'undefined'){
+				++lineNumber;
+				tspan = text.append("tspan").attr("x", function(d) { return d.children || d._children ? -10 : 1; }).attr("y", 0).attr("dy", lineNumber * lineHeight + dy + "em").text(words[0].toLowerCase().substring(0,15));  //limit first word length at 15 (ip length)
+			}
+			
+			//SECOND WORD (DESC)
+			if (typeof words[1] != 'undefined'){
+				++lineNumber;
+				tspan = text.append("tspan").attr("x", function(d) { return d.children || d._children ? -10 : 1; }).attr("y", 0).attr("dy", lineNumber * lineHeight + dy + "em").text(words[1].toLowerCase().substring(0,15));  //limit second word length at 15
+			}				
+		});
+	}
+	
+	// EXPORT SCHEMA //	
+	// Set-up the export button
+	d3.select('#saveSchema').on('click', function(){	
+		var svg_el = d3.select("svg")
+			.attr("version", 1.1)
+			.attr("xmlns", "http://www.w3.org/2000/svg")
+			.node();	
+		
+		saveSvgAsPng(svg_el, "schema" + ".png", { left: -520, top: -200 });
+	});
+	
+	
+	var allLabels 		= [];
+	var itemNewData 	= [];
+	var itemUpdateData 	= [];
+	var add = 0;
+
+	// Item New Data & Label
+	<% itemByDateArr.forEach(function(eventNew){ %>
+		allLabels.push(<%= new Date(eventNew.date).getTime() %>);
+		itemNewData.push(<%= eventNew.count %>);		
+	<% }); %>
+	
+	// Item Update Data & Label
+	// init x fisrt to zero (padding item new)
+	itemUpdateData = new Array(itemNewData.length).fill(0);
+
+	<% itemByUpdateDateArr.forEach(function(eventUpdate){ %>
+		// if exist, update zero to value
+		if(allLabels.indexOf(<%= new Date(eventUpdate.date).getTime() %>) > -1){
+			itemUpdateData[allLabels.indexOf(<%= new Date(eventUpdate.date).getTime() %>)] = <%= eventUpdate.count %>;
+		}else{
+		// if not exist, add value		
+			allLabels.push(<%= new Date(eventUpdate.date).getTime() %>);
+			itemUpdateData.push(<%= eventUpdate.count %>);
+		}
+	<% }); %>	
+	
+	// Add padding at end of itemNewData array if itemUpdateData is more longer
+	if((itemUpdateData.length - itemNewData.length) > 0 ){
+		itemNewData = itemNewData.concat(new Array((itemUpdateData.length - itemNewData.length)).fill(0));
+	}
+	
+	//if not item, add label to date.now
+	if(allLabels.length <= 0){
+		allLabels.push(Date.now());
+	}
+
+	// add one day labels to see item add now (because plot only at 12h00 by day)
+	allLabels.push(new Date(Math.max.apply(Math, allLabels)).setHours(32));	
+				
+	//CREATE ITEMS CHART
+	window.onload = function () {
+		var timeFormat = 'MM/DD/YYYY HH:mm';
+		
+		// Bar chart
+		var chart = new Chart("projectChart", {
+			overlayBars: false,
+			type: 'bar',
+			data: {
+			  labels: allLabels,
+			  datasets: [
+				{
+					label: " New Item",
+					backgroundColor: "#3e95cd",
+					data: itemNewData
+				},
+				{
+					label: " Update Item",
+					backgroundColor: "#8e5ea2",
+					data: itemUpdateData			
+				}			
+			  ]
+			},
+			options: {
+				legend: {
+					display: true,
+					position: 'bottom',
+					labels: {
+						fontColor: 'black',
+						fontSize: 14,
+					},
+					datas: {
+						fontColor: 'black',
+						fontSize: 14,
+					}
+				},
+				tooltips: 
+				{
+					enabled: false,
+					custom: function(tooltip) {	
+						// Create element
+						var tooltipElement = document.getElementById('CTooltip');
+
+						setTimeout(function(){
+							if (tooltip.opacity === 0) {
+								tooltipElement.style.opacity = 0;
+								//tooltipElement.innerHTML = '';								
+								return;
+							}
+						//}, 2000);
+						}, 1000);
+											
+						// Keep bar color
+						if(typeof tooltip.labelColors != 'undefined'){
+							color = tooltip.labelColors[0].backgroundColor;
+						}
+
+						if (typeof tooltipElement != 'undefined' && typeof tooltip.body != 'undefined'){
+							if (typeof tooltip.body[0].lines[0] != 'undefined'){
+								// Defined display, position, and set styles for font
+								var positionY = this._chart.canvas.offsetTop;
+								var positionX = this._chart.canvas.offsetLeft;
+								
+								tooltipElement.style.opacity = 1;
+								// tooltip right
+								if(tooltip.caretX >= 500){
+									tooltipElement.style.left = -85 + positionX  + tooltip.caretX + 'px';
+								// tooltip left
+								}else{
+									tooltipElement.style.left = 85 + positionX  + tooltip.caretX + 'px';
+								}
+								tooltipElement.style.top = positionY + tooltip.caretY + 'px';
+								tooltipElement.style.fontFamily = tooltip._fontFamily;
+								tooltipElement.style.fontSize = tooltip._fontSize;
+								tooltipElement.style.fontStyle = tooltip._fontStyle;
+								tooltipElement.style.padding = tooltip.yPadding + 'px ' + tooltip.xPadding + 'px'; 
+								tooltipElement.style.border = "solid";
+								tooltipElement.style.borderColor = color;
+								tooltipElement.style.borderWidth = 0.5 + 'px';	
+																						
+								// Set Text
+								var dataSetIndex = tooltip.dataPoints[0].datasetIndex;
+								var xLabel = tooltip.dataPoints[0].xLabel;
+								var innerHtml = '';
+									
+								// If dataSetIndex not project
+								if (dataSetIndex != 2){
+									innerHtml = '<thead>';
+									innerHtml += '<tr><th><center>' + tooltip.title[0] + '</center></th></tr>';
+									innerHtml += '</thead><tbody>';
+									innerHtml += '<tr><td><center>' + tooltip.body[0].lines[0] + '</center></td></tr>';
+									innerHtml += '<tr><td><center>' + "<u>Show Item :</u>" + '</center></td></tr>';
+									innerHtml += '<tr><td>' + '<a href=/item-date-at-' + xLabel + '>At this Date</a>' + '</td></tr>';
+									innerHtml += '<tr><td>' + '<a href=/item-date-since-' + xLabel + '>Since this Date</a>' + '</td></tr>';
+									innerHtml += '</tbody>';
+								}
+								tooltipElement.innerHTML = "<table>" + innerHtml + "</table>";
+							}									
+						}
+					},
+					callbacks: {
+						title: function(tooltipItem, data) {
+							// use toDateString() to disable time
+							return new Date(data.labels[tooltipItem[0].index]).toDateString();
+						},
+						label: function(tooltipItem, data) {
+							var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+							var label = new Date(data.labels[tooltipItem.index]);
+
+							// If dataset 0 (New Items)
+							if(tooltipItem.datasetIndex == 0 && value != 0) {
+								return "New Item : " + value;
+							}
+							// If dataset 1 (Update Items)
+							else if(tooltipItem.datasetIndex == 1 && value != 0) {
+								return "Update Item : " + value;
+							}
+						},
+						afterLabel: function(tooltipItem, data) {
+							var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+							if(tooltipItem.datasetIndex == 2 && value.reason) {
+									return "status : " + value.reason;
+							}
+						}
+					},					
+				},								
+				scales: {
+					xAxes: [{
+						type: "time",
+						display: true,
+						stacked: true,
+						categoryPercentage: 0.2,
+						time: {
+							format: timeFormat,
+							unitStepSize: 1,
+							unit: "day"
+						}
+					}],
+					yAxes: [{
+						stacked: true,
+						ticks: {
+							beginAtZero: true,
+							stepSize: 2,
+						},
+						gridLines: {
+							display:false
+						}																								
+					}]
+				},
+				responsive: true				
+			}			
+		});
+
+		chart.render();
+				
+	}
+			
+</script>
+
+</html>

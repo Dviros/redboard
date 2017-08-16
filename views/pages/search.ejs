@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../partials/head %>
+</head>
+
+<body>
+
+    <div id="wrapper">
+		 <% include ../partials/header %>
+		<div id="page-wrapper">
+
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel">
+                        </div>
+                        <ol class="breadcrumb">
+                            <li>
+                                <i class="fa fa-dashboard"></i>  <a href="/project-dashboard">Dashboard</a>
+                            </li>
+                            <li class="active">
+                                <i class="fa fa-file"></i> AdvancedSearch
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <!-- /.row -->
+                
+
+                <div class="row">
+					<div class="col-lg-1 col-md-1">
+						<label>Search in</label>
+                    </div>
+					<form action="#" method="post" role="form">
+						<div class="col-lg-3 col-md-6">
+							<div class="form-group">       
+								<select name="filter" class="form-control">
+									<option value="all">All</option>
+									<option disabled>Items category</option>
+									<% items.forEach(function(itemCategory){ %>
+										<option value="category-<%= itemCategory %>">→ <%= itemCategory %></option>
+									<% }); %>
+									<option value="files">Files</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-6">        
+							<div class="form-group">
+								<input name="searchInput" class="form-control" value="<%= searchInput %>" >
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-6">
+							<button type="submit" class="btn btn-default"><i class="fa fa-search"></i> Submit</button>
+						</div>
+					</form>
+				</div>
+ 
+
+
+                <div class="page-header"></div>
+
+</br >
+ <div class="row">
+      <div class="panel-body">
+        <table class="table table-striped tablesorter" style="margin-top:-12px;">
+          <thead>
+            <tr>
+			  <th style="width:10%"><b>Element Type</b> <i class="fa fa-sort"></i></th>
+              <th style="width:20%"><b>Element Name</b> <i class="fa fa-sort"></i></th>
+              <th style="width:15%"><b>Category</b> <i class="fa fa-sort"></i></th>
+              <th style="width:30%"><b>Create Date</b> <i class="fa fa-sort"></i></th>
+              <th style="width:15%"><b>Owner</b> <i class="fa fa-sort"></i></th>
+            </tr>
+          </thead>
+
+          <tbody>
+			 
+			<% if ( typeof resultItems !== 'undefined' && resultItems ) { %> 
+				<% resultItems.forEach(function(resultItem){ %>
+					<% if ( typeof resultItem !== 'undefined' && resultItem ) { %>
+						<tr>
+							<td style="width:10%">Item</td>
+								<td style="width:20%"><a href="/item-edit-<%= resultItem.id %>"><b><%= resultItem.ip %> <%= resultItem.name %></b></a></td>
+								<td style="width:15%"><%= resultItem.category %></td>
+								<td style="width:30%"><%= resultItem.date %></td>
+								<td style="width:15%"><%= resultItem.owner %></td>
+								<td style="width:15%">
+							</td>
+						</tr>
+					<% } %>
+				<% }); %>
+			<% } %>
+			
+			<% if ( typeof resultFiles !== 'undefined' && resultFiles ) { %>
+				<% resultFiles.forEach(function(resultFile){ %>
+					<% if ( typeof resultFile !== 'undefined' && resultFile ) { %>
+						<tr>
+							<td style="width:10%">File</td>
+								<td style="width:15%"><a href="/file-show-<%= resultFile.id %>"><b><%= resultFile.name %></b></a></td>
+								<td style="width:15%">-</td>
+								<td style="width:25%">-</td>
+								<td style="width:15%">-</td>
+								<td style="width:15%">
+							</td>
+						</tr>
+					<% } %>
+				<% }); %>
+			<% } %>			
+            
+          </tbody>
+          
+        </table>
+      </div>
+ 
+</div> 
+
+
+ 
+				
+            </div>
+            <!-- /.container-fluid -->
+		</div>
+	</div>
+   
+	<% include ../partials/footer %>
+    
+</body>
+
+</html>
+

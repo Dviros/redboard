@@ -1,0 +1,33 @@
+<!-- views/partials/footer.ejs -->
+
+<p class="text-center text-muted">Copyright &copy; 2017 @redhunter0x27 </p>
+
+<!-- jQuery -->
+<script src="/js/jquery.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- canvasjs JavaScript -->
+<script src="/js/plugins/chartjs/Chart.min.js"></script>
+
+<!-- js to date JavaScript -->
+<link rel="stylesheet" type="text/css" href="/css/jquery-ui.css" media="all">
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/js/jquery.tablesorter.min.js"></script>
+
+    <script>
+    $(function() {
+        $('#datepick').datepicker();
+    });
+    
+	$('table').tablesorter({
+		textExtraction: function(node){ 
+			var $icon = $(node).find('i');
+			return $icon.length ? $icon[0].className : node.textContent;
+		}
+	});     
+    </script>
+
+

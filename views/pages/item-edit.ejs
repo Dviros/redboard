@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../partials/head %>
+</head>
+
+<body>
+
+    <div id="wrapper">
+		 <% include ../partials/header %>
+		<div id="page-wrapper">
+
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel">
+			</div>
+			<ol class="breadcrumb">
+                            <li>
+                                <i class="fa fa-dashboard"></i>  <a href="/project-dashboard">Dashboard</a>
+                            </li>
+                            <li>
+                                <%= item.ip %> <%= item.name %>
+                            </li>
+                            <li class="active">
+                                <i class="fa fa-file"></i> ItemEdit
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <!-- /.row -->
+                
+                
+                <div class="row">
+                    <div class="col-lg-6">
+                        <form action="" method="post" role="form" enctype="multipart/form-data">                            
+							<% if ( item.category != "host" ) {%>
+								<div class="form-group">
+									<label>Name</label>
+									<input name="name" value="<%= item.name %>" class="form-control">
+									<p class="help-block">Title is required and to be at least 3 characters.</p>
+								</div>                     
+							<% }else{ %>                     
+								<div class="form-group"> 
+									<label>Name</label>						
+									<div class="row">		
+										<div class="col-lg-6">	
+											<input type="text"  name="ip" value="<%= item.ip %>" class="form-control" maxlength="39">
+											<p class="help-block">IPV4 / IPV6 / MAC</p>
+										</div>
+										<div class="col-lg-6">
+											<input type="text" name="name" value="<%= item.name %>" class="form-control">	
+											<p class="help-block">Hostname / DNS / Other</p>						
+										</div>
+									</div>
+								</div>
+							<% } %>                            
+                            
+                            <% if ( item.category == "host" ) {%>								
+								<div class="form-group">
+									<div class="row">
+										<div class="col-lg-6">
+											<label>Draw</label>
+											<label class="switch">
+												  ...
+											  <% if (item.draw == "0") {%>
+												<input type="checkbox" name="draw">
+											  <% }else{ %>
+												  <input type="checkbox" name="draw" checked>
+											  <% } %>
+											  <div class="slider round"></div>
+											</label>
+										</div>
+										 <div class="col-lg-6">
+											<label>Owned</label>
+											<label class="switch">
+												  ...
+											  <% if (item.owned == "0") {%>
+												<input type="checkbox" name="owned">
+											  <% }else{ %>
+												  <input type="checkbox" name="owned" checked>
+											  <% } %>
+											  <div class="slider round"></div>
+											</label>											 
+										</div>
+									</div>
+								</div>   
+								
+															                                                        
+								<div class="form-group">
+									<label>OS</label>
+									<select name="os" class="form-control">
+										<% if (item.os) {%>
+											<option value="<%= item.os %>"><%= item.os %></option>
+										<% } %>
+										<% if (item.os != "unknown") {%>
+											<option value="unknown">unknown</option>
+										<% } %>	
+										<% if (item.os != "windows") {%>
+											<option value="windows">windows</option>
+										<% } %>                                    								
+										<% if (item.os != "linux") {%>
+											<option value="linux">linux</option>
+										<% } %>   
+										<% if (item.os != "cisco") {%>
+											<option value="cisco">cisco</option>
+										<% } %> 
+										<% if (item.os != "mikrotik") {%>
+											<option value="mikrotik">mikrotik</option>
+										<% } %>
+										<% if (item.os != "firewall") {%>
+											<option value="firewall">firewall</option>
+										<% } %>										 
+									</select>
+								</div>
+							<% } %> 
+							                            
+							<div class="form-group">
+                                <label>Status</label>
+                                <select name="status" class="form-control">
+									<option value="<%= item.status %>"><%= item.status %></option>
+									<% if (item.status != "valid") {%>
+										<option value="valid">Valid</option>
+                                    <% } %>
+                                    <% if (item.status != "old") {%>
+										<option value="old">Old</option>
+                                    <% } %>
+                                </select>
+							</div>
+
+							<div class="form-group">
+								<label for="disabledSelect">Category</label>
+                                <input class="form-control" id="disabledInput" type="text" placeholder="<%= item.category%>" disabled>
+                                <input type="hidden" value="<%= item.category %>" name="category" />
+                            </div>
+							
+							<% if ( item.subcategory == undefined ) {%>
+								<div class="form-group">
+									<label>SubCategory</label>
+									<input name="subcategory" class="form-control">
+								</div>				
+							<% }else if ( item.subcategory == "" ) {%>
+								<div class="form-group">
+									<label>SubCategory</label>
+									<input name="subcategory" class="form-control">
+								</div>				
+							<% }else if( item.subcategory == "other" ){ %>
+								<div class="form-group">
+									<label>SubCategory</label>
+									<input name="subcategory" class="form-control">
+								</div>	
+							<% }else{ %>
+								<div class="form-group">
+									<label for="disabledSelect">SubCategory</label>
+									<input name="subcategory" value="<%= item.subcategory %>" class="form-control">
+								</div>
+							<% } %>
+							
+							<% if ( item.category == "backdoor" ) {%>
+								<div class="form-group">
+									<label>Backdoor ID</label>
+									<input name="backdoorID" value="<%= item.backdoorID %>" class="form-control">
+								</div>				
+							<% } %>	
+							
+							<% if ( item.category == "backdoor" ) {%>
+								<div class="form-group">
+									<label>Backdoor Time</label>
+                                
+									<div class="row">
+										<div class="col-lg-2">
+											<label>Day</label>
+											<select name="bdDay" class="form-control">
+												<option value="<%= item.bdDay%>"><%= item.bdDay%></option>
+												<% for (i=0; i<31; i++ ){ %>
+													<option value="<%= i%>"><%= i%></option>
+												<% } %>	
+											</select>
+										</div>
+										<div class="col-lg-2">
+											<label>Hour</label>
+											<select name="bdHour" class="form-control">
+												<option value="<%= item.bdHour%>"><%= item.bdHour%></option>
+												<% for (i=0; i<24; i++ ){ %>
+													<option value="<%= i%>"><%= i%></option>
+												<% } %>	
+											</select>
+										</div> 
+										<div class="col-lg-2">
+											<label>Minute</label>
+											<select name="bdMin" class="form-control">
+												<option value="<%= item.bdMin%>"><%= item.bdMin%></option>
+												<% for (i=0; i<60; i++ ){ %>
+													<option value="<%= i%>"><%= i%></option>
+												<% } %>	
+											</select>
+										</div> 									 
+									</div>
+                                                              									
+								</div>				
+							<% } %>													
+							
+                            <div class="form-group">
+                                <label>Attach Items</label>
+                                
+                                <select name="attachItems[]" size="4" multiple class="form-control">
+									<% items.forEach(function(item2attach){ %>
+										<% if ( item2attach.id != item.id ) { %>
+											<% if ( item.attachItems != "" ) { %>
+												<% if (item.attachItems.indexOf(item2attach.id) == -1) {%>
+													<option value="<%= item2attach.id %>"><%= item2attach.ip %> <%= item2attach.name %></option>
+												<%  } %>	
+											<%  } else { %>
+													<option value="<%= item2attach.id %>"><%= item2attach.ip %> <%= item2attach.name %></option>
+											<%  } %>
+										<%  } %>
+                                    <% }); %>
+                                </select>
+                            </div>
+                            
+							<div class="form-group">
+								<input type="text"  class="form-control" id="filter" value="" />
+								<p class="help-block">Live Search</p>                                                             
+                            </div>                             
+                            							
+							<div class="row">
+								<div class="col-lg-6">
+									<% item.attachItems.forEach(function(attach){ %>
+										<% items.forEach(function(itemattach){ %>
+											<% if ( itemattach.id == attach ) { %>
+												<div class="pull-left">
+													<span class="input-group-addon"><a href="/item-edit-<%= attach%>" class="list-group"><%= itemattach.name%></a></span>
+													<span class="input-group-addon"><a href="/item-attach-<%= attach%>" class="list-group"><i class="fa fa-remove "></i></a></span>												
+												</div> 		
+											<%  } %>
+										<% }); %>
+									<% }); %>
+								</div>
+							</div>
+							</br >
+                          
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea name="description" class="form-control" rows="15"><%= item.description %></textarea>
+                            </div>
+                            
+                            <label>Files :</label>
+							<div class="row">
+								<div class="col-lg-6">
+									<% files.forEach(function(file){ %>
+												<div class="pull-left">
+													<span class="input-group-addon"><a href="/file-show-<%= file.id%>" class="list-group"><%= file.name%></a></span>
+													<span class="input-group-addon"><a href="/file-delete-<%= file.id%>" class="list-group"><i class="fa fa-remove "></i></a></span>											
+												</div> 		
+										<% }); %>
+								</div>
+							</div>	
+							</br >						                          
+                                                       
+                            <div class="form-group">
+								<input type="file" id="file" name="file[]" multiple="multiple"><br/>
+								
+								<div id="selectedFiles"></div>
+								
+									<script>
+									var selDiv = "";
+		
+									document.addEventListener("DOMContentLoaded", init, false);
+	
+									function init() {
+										document.querySelector('#file').addEventListener('change', handleFileSelect, false);
+										selDiv = document.querySelector("#selectedFiles");
+									}
+		
+									function handleFileSelect(e) {
+										console.dir(e);
+		
+										if(!e.target.files) return;
+		
+										selDiv.innerHTML = "";
+		
+										var files = e.target.files;
+										for(var i=0; i<files.length; i++) {
+											var f = files[i];
+			
+											selDiv.innerHTML += f.name + "<br/>";
+										}
+									}
+									</script>	
+							</div>
+							</br >
+                            
+							<button type="submit" class="btn btn-info">Update</button>
+						</form>
+					</div>
+				</div>
+				
+
+            </div>
+            <!-- /.container-fluid -->
+		</div>
+	</div>
+   
+	<% include ../partials/footer %>
+    
+	<script type="text/javascript">
+	$(document).ready(function(){
+		$("#filter").keyup(function(){
+	 
+			// Retrieve the input field text and reset the count to zero
+			var filter = $(this).val(), count = 0;
+	 
+			// Loop through the comment list
+			$("select option").each(function(){
+	 
+				// If the list item does not contain the text phrase fade it out
+				if ($(this).text().search(new RegExp(filter, "i")) < 0) {
+					$(this).fadeOut();
+	 
+				// Show the list item if the phrase matches and increase the count by 1
+				} else {
+					$(this).show();
+					count++;
+				}
+			});
+		});
+	});
+	</script>    
+    
+</body>
+
+</html>

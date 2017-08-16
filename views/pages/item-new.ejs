@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../partials/head %>
+</head>
+
+<body>
+
+    <div id="wrapper">
+		 <% include ../partials/header %>
+		<div id="page-wrapper">
+
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel">
+                        </div>
+                        <ol class="breadcrumb">
+                            <li>
+                                <i class="fa fa-dashboard"></i>  <a href="/project-dashboard">Dashboard</a>
+                            </li>							
+							<li>
+								<%= category %>
+							</li>
+                            <li class="active">
+                                <i class="fa fa-file"></i> ItemNew
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <!-- /.row -->
+                
+                
+                <div class="row">
+                    <div class="col-lg-6">
+                        <form action="/item-new" method="post" role="form" enctype="multipart/form-data">
+                     
+							<% if ( category != "host" ) {%>
+								<div class="form-group">
+									<label>Name</label>
+									<input name="name" class="form-control">
+									<p class="help-block">Title is required and to be at least 3 characters.</p>
+								</div>                     
+							<% }else{ %>                     
+								<div class="form-group"> 
+									<label>Name</label>						
+									<div class="row">		
+										<div class="col-lg-6">	
+											<input type="text"  name="ip" class="form-control" maxlength="39">
+											<p class="help-block">IPV4 / IPV6 / MAC</p>
+										</div>
+										<div class="col-lg-6">
+											<input type="text" name="name" class="form-control">	
+											<p class="help-block">Hostname / DNS / Other</p>						
+										</div>
+									</div>
+								</div>
+							<% } %>
+					
+				
+						                                                                                                                                     
+                            <% if ( category == "host" ) {%>
+								<div class="form-group">
+									<div class="row">		
+										<div class="col-lg-6">									
+											<label>Draw</label>
+											<label class="switch">
+												  ...
+											  <input type="checkbox" name="draw" checked>
+											  <div class="slider round"></div>
+											</label>
+										</div>		
+										<div class="col-lg-6">
+											<label>Owned</label>
+											<label class="switch">
+												  ...
+											  <input type="checkbox" name="owned">
+											  <div class="slider round"></div>
+											</label>
+										</div>
+									</div> 									
+								</div> 								  							                       
+								<div class="form-group">
+									<label>OS</label>
+									<select name="os" class="form-control">
+										<option value="unknown">unknown</option>
+										<option value="windows">windows</option>
+										<option value="linux">linux</option>
+										<option value="cisco">cisco</option>
+										<option value="mikrotik">mikrotik</option>
+										<option value="firewall">firewall</option>
+									</select>
+								</div>  							                       								
+							<% } %>
+							                            
+							<div class="form-group">
+                                <label>Status</label>
+                                <select name="status" class="form-control">
+                                    <option value="valid">Valid</option>
+                                    <option value="old">Old</option>
+                                </select>
+							</div>
+														
+							<div class="form-group">
+								<label for="disabledSelect">Category</label>
+                                <% if ( category == undefined || category == "" ) {%>
+									<input class="form-control" type="text" placeholder="<%= category%>" />
+									<input type="hidden" value=<%= category %> name="category" />									
+								<% }else{ %>
+									<input class="form-control" id="disabledInput" type="text" placeholder="<%= category%>" disabled>
+									<input type="hidden" value=<%= category %> name="category" />									
+								<% } %>
+                            </div>                            
+							
+							<% if ( subcategory == undefined ) {%>
+								<div class="form-group">
+									<label>SubCategory</label>
+									<input name="subcategory" class="form-control">
+								</div>				
+							<% }else if ( subcategory == "" ) {%>
+								<div class="form-group">
+									<label>SubCategory</label>
+									<input name="subcategory" class="form-control">
+								</div>				
+							<% }else if( subcategory == "other" ){ %>
+								<div class="form-group">
+									<label>SubCategory</label>
+									<input name="subcategory" class="form-control">
+								</div>	
+							<% }else{ %>
+								<div class="form-group">
+									<label for="disabledSelect">SubCategory</label>
+									<input class="form-control" id="disabledInput" type="text" placeholder="<%= subcategory%>" disabled>
+									<input type="hidden" value=<%= subcategory %> name="subcategory" />
+								</div>
+							<% } %>
+		
+							<% if ( category == "backdoor" ) {%>
+								<div class="form-group">
+									<label>Backdoor ID</label>
+									<input name="backdoorID" class="form-control">
+								</div>				
+							<% } %>		
+							
+							<% if ( category == "backdoor" ) {%>
+								<div class="form-group">
+									<label>Backdoor Time</label>
+                                
+									<div class="row">
+										<div class="col-lg-2">
+											<label>Day</label>
+											<select name="bdDay" class="form-control">
+												<% for (i=0; i<31; i++ ){ %>
+													<option value="<%= i%>"><%= i%></option>
+												<% } %>	
+											</select>
+										</div>
+										<div class="col-lg-2">
+											<label>Hour</label>
+											<select name="bdHour" class="form-control">
+												<% for (i=0; i<24; i++ ){ %>
+													<option value="<%= i%>"><%= i%></option>
+												<% } %>	
+											</select>
+										</div> 
+										<div class="col-lg-2">
+											<label>Minute</label>
+											<select name="bdMin" class="form-control">
+												<% for (i=0; i<60; i++ ){ %>
+													<option value="<%= i%>"><%= i%></option>
+												<% } %>	
+											</select>
+										</div> 									 
+									</div>
+                                                              									
+								</div>				
+							<% } %>													
+
+                            <div class="form-group">								
+								<label>Attach Items </label>
+
+                                <select name="attachItems[]" size="4" multiple class="form-control">
+									<% if ( items != undefined ) {%>
+										<% items.forEach(function(item){ %>
+											<option value="<%= item.id %>"><%= item.ip %> <%= item.name %></option>
+										<% }); %>
+                                    <% } %>
+                                </select>
+                            </div>
+
+							<div class="form-group">
+								<input type="text"  class="form-control" id="filter" value="" />
+								<p class="help-block">Live Search</p>                                                             
+                            </div>                             
+                        
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea name="description" class="form-control" rows="15"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+								<input type="file" id="file" name="file[]" multiple="multiple"><br/>
+								<label>Files :</label>
+								<div id="selectedFiles"></div>
+								
+									<script>
+									var selDiv = "";
+		
+									document.addEventListener("DOMContentLoaded", init, false);
+	
+									function init() {
+										document.querySelector('#file').addEventListener('change', handleFileSelect, false);
+										selDiv = document.querySelector("#selectedFiles");
+									}
+		
+									function handleFileSelect(e) {
+										console.dir(e);
+		
+										if(!e.target.files) return;
+		
+										selDiv.innerHTML = "";
+		
+										var files = e.target.files;
+										for(var i=0; i<files.length; i++) {
+											var f = files[i];
+			
+											selDiv.innerHTML += f.name + "<br/>";
+										}
+									}
+									</script>	
+							</div>
+							</br >
+                            
+							<button type="submit" class="btn btn-info">Create New</button>
+						</form>
+					</div>
+				</div>
+				
+
+            </div>
+            <!-- /.container-fluid -->
+		</div>
+	</div>
+   
+	<% include ../partials/footer %>
+	
+	<script type="text/javascript">
+	$(document).ready(function(){
+		$("#filter").keyup(function(){
+	 
+			// Retrieve the input field text and reset the count to zero
+			var filter = $(this).val(), count = 0;
+	 
+			// Loop through the comment list
+			$("select option").each(function(){
+	 
+				// If the list item does not contain the text phrase fade it out
+				if ($(this).text().search(new RegExp(filter, "i")) < 0) {
+					$(this).fadeOut();
+	 
+				// Show the list item if the phrase matches and increase the count by 1
+				} else {
+					$(this).show();
+					count++;
+				}
+			});
+		});
+	});
+	</script> 	
+    
+</body>
+
+</html>
+

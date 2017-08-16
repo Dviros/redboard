@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../partials/head %> 
+    
+	 <style>
+	.win {
+		width:92%;
+		text-align:center;
+	}
+	</style>       
+</head>
+
+<body>
+    <div id="wrapper">
+		 <% include ../partials/header %>		            		            		            		                		 
+           		 		 
+		         <div id="page-wrapper">
+
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+			<div class="panel">
+			</div>
+			<ol class="breadcrumb">
+                            <li>
+                                <i class="fa fa-dashboard"></i> Dashboard 
+                            </li>
+			    <li class="active">
+				<i class="fa fa-file"></i> Ranking
+			    </li>
+                        </ol>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+		        <div class="row">
+					<div class="win">
+						<i class="fa fa-trophy fa-5x"><% if( itemAll.length > 0 ){ %> <%= itemAll[0]._id%><% }else{ %>-<% } %></i>
+						<div class="text-center"><% if( itemAll.length > 0 ){ %><h3><%= itemAll[0].count%></h3><% }else{ %>-<% } %></div>
+					</div>
+		        </div>
+		        
+         
+				<div class="page-header"></div>
+						        
+                
+                <div class="col-lg-13 col-lg-offset-1">
+                
+                				
+                <div class="row">
+                    <div class="col-lg-2 col-md-6">
+                        <div class="panel panel-danger">
+							<div class="text-center"><h3><b>Breacher</b></h3></div>
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="text-center">
+                                        <div class="huge"><% if( itemVuln.length > 0 ){ %><%= itemVuln[0]._id%><% }else{ %>-<% } %></div>
+                                        <div  style="font-size:18px;"><% if( itemVuln.length > 0 ){ %><%= itemVuln[0].count%><% }else{ %><% } %> Vulnerabilities</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6">
+                        <div class="panel panel-info">
+							<div class="text-center"><h3><b>Investigator</b></h3></div>
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="text-center">
+                                        <div class="huge"><% if( itemHost.length > 0 ){ %><%= itemHost[0]._id%><% }else{ %>-<% } %></div>
+                                        <div  style="font-size:18px;"><% if( itemHost.length > 0 ){ %><%= itemHost[0].count%><% }else{ %><% } %> Hosts</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6">
+                        <div class="panel panel-default">
+							<div class="text-center"><h3><b>Negotiator</b></h3></div>
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="text-center">
+                                        <div class="huge"><% if( itemPass.length > 0 ){ %><%= itemPass[0]._id%><% }else{ %>-<% } %></div>
+                                        <div  style="font-size:18px;"><% if( itemPass.length > 0 ){ %><%= itemPass[0].count%><% }else{ %><% } %> Passwords</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6">
+                        <div class="panel panel-warning">
+							<div class="text-center"><h3><b>Grenadier</b></h3></div>
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="text-center">
+                                        <div class="huge"><% if( itemBD.length > 0 ){ %><%= itemBD[0]._id%><% }else{ %>-<% } %></div>
+                                        <div  style="font-size:18px;"><% if( itemBD.length > 0 ){ %><%= itemBD[0].count%><% }else{ %><% } %> Backdoors</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6">
+                        <div class="panel panel-success">
+							<div class="text-center"><h3><b>Instructor</b></h3></div>
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="text-center">
+                                        <div class="huge"><% if( itemTips.length > 0 ){ %><%= itemTips[0]._id%><% }else{ %>-<% } %></div>
+                                        <div  style="font-size:18px;"><% if( itemTips.length > 0 ){ %><%= itemTips[0].count%><% }else{ %><% } %> Tips</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+					</div>
+
+				</div>
+				
+                <div class="row">
+					<div class="page-header">
+						<div class="col-lg-13">
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover table-striped">
+									<thead>
+										<tr>
+											<th>Rank <i class="fa fa-sort"></i></th>
+											<th>owner <i class="fa fa-sort"></i></th>
+											<th>Vulnerabilities <i class="fa fa-sort"></i></th>
+											<th>Hosts <i class="fa fa-sort"></i></th>
+											<th>Passwords <i class="fa fa-sort"></i></th>
+											<th>Backdoors <i class="fa fa-sort"></i></th>
+											<th>Tips <i class="fa fa-sort"></i></th>
+											<th>Total <i class="fa fa-sort"></i></th>
+										</tr>
+									</thead>
+									<tbody>	
+										<% itemAll.forEach(function(user, index){ %>						
+											<tr>	
+												<td><%= index+1 %></td>
+												<td><%= user._id %></td>
+												<% cVuln = itemVuln.filter(function(value){ return value._id == user._id }); %>
+												<% if ( cVuln.length > 0 ){ %>
+													<td><%= cVuln[0].count%></td>	
+												<% }else{ %>
+													<td>0</td>
+												<% } %>	
+												<% cHost = itemHost.filter(function(value){ return value._id == user._id }); %>
+												<% if ( cHost.length > 0 ){ %>
+													<td><%= cHost[0].count%></td>	
+												<% }else{ %>
+													<td>0</td>
+												<% } %>	
+												<% cPass = itemPass.filter(function(value){ return value._id == user._id }); %>
+												<% if ( cPass.length > 0 ){ %>
+													<td><%= cPass[0].count%></td>	
+												<% }else{ %>
+													<td>0</td>
+												<% } %>	
+												<% cBD = itemBD.filter(function(value){ return value._id == user._id }); %>
+												<% if ( cBD.length > 0 ){ %>
+													<td><%= cBD[0].count%></td>	
+												<% }else{ %>
+													<td>0</td>
+												<% } %>
+												<% cTips = itemTips.filter(function(value){ return value._id == user._id }); %>
+												<% if ( cTips.length > 0 ){ %>
+													<td><%= cTips[0].count%></td>	
+												<% }else{ %>
+													<td>0</td>
+												<% } %>																																																																																														
+												<td><%= user.count %></td>
+											</tr>
+										<% }); %>
+									</tbody>
+								</table>
+							</div>
+						</div>
+                    </div>
+                </div>	                							
+
+			</div>
+		</div>
+		
+		<% include ../partials/footer %>
+
+</html>
