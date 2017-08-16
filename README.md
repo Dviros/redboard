@@ -1,4 +1,3 @@
-<b><font size="6"> Red<font color="#c10202">Board</font></font></b>
 
 ![RedBoard](doc/images/index.png)
 
@@ -225,4 +224,4 @@ RedBoard Community is released under the AGPL 3.0 license.
 
 ## Release Notes
 
-v1.0 - 2017-07-06 
+v1.0.0 - 2017-07-06 
